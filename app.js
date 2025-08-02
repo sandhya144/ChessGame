@@ -19,20 +19,58 @@ app.get("/", (req,res) => {
     res.render("index", {title: "ChessGame"});
 });
 
- io.on("connection", function(uniquesocket){
-    console.log("connected");
-
-    // uniquesocket.on("join", function(){
+// uniquesocket.on("join", function(){
     //     // console.log("joined");
     //     io.emit("joined all"); // send an event to all clients that a player has joined
 
-    uniquesocket.on("disconnected", function(){
-        console.log("disconnected");
-    })
+    // uniquesocket.on("disconnect", function(){
+    //     console.log("disconnected");    // when a player disconnects
+    // });
 
-    });
+ io.on("connection", function (uniquesocket) {
+  console.log("connected");
 
+  if (!players.white) {
+    players.white = uniquesocket.id;
+    uniquesocket.emit("playerRole", "W");
+  } else if (!players.black) {
+    players.black = uniquesocket.id;
+    uniquesocket.emit("playerRole", "b");
+  } else {
+    uniquesocket.emit("spectatorRole");
+  }
 
-server.listen(3000, function(){
-    console.log("Server is running on port 3000");
+  uniquesocket.on("disconnect", function () {
+    console.log("disconnected");
+    if (uniquesocket.id === players.white) {
+      delete players.white;
+    } else if (uniquesocket.id === players.black) {
+      delete players.black;
+    }
+  });
+
+  uniquesocket.on("move", (move) => {
+    try {
+      if (chess.turn() === "w" && uniquesocket.id !== players.white) return;
+      if (chess.turn() === "b" && uniquesocket.id !== players.black) return;
+
+      const result = chess.move(move);
+
+      if (result) {
+        currentPlayer = chess.turn();
+        io.emit("move", move);
+        io.emit("boardState", chess.fen());
+      } else {
+        console.log("Invalid Move");
+        uniquesocket.emit("Invalid move", move);
+      }
+    } catch (err) {
+      console.log(err);
+      uniquesocket.emit("Invalid move", move);
+    }
+  });
+});
+
+server.listen(3000, function () {
+  console.log("Server is running on port 3000");
 });
