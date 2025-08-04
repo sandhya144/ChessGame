@@ -5,17 +5,135 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chess Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+
+  <style>
+
+    .chessboard{
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-template-rows: repeat(8, minmax(0, 1fr));
+      width : 400px;
+      height: 400px;
+      transform : rotate(0deg);
+    }
+
+    .piece.white{
+      color : white;
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1));
+      font-family: 'Arial', 'Times New Roman', sans-serif; /* override emoji-style fonts */
+      font-weight: light;
+    }
+    
+    .piece.black{
+      color: black;
+      font-family: 'Arial', 'Times New Roman', sans-serif; /* override emoji-style fonts */
+      font-weight: medium;
+    }
+
+    .flipped{
+      transform: rotate(180deg);
+    }
+
+    .square{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .square.light{
+      background-color: #f0d9b5;
+    }
+
+    .square.dark{
+      background-color: #b58863;
+    }
+
+  .piece-img {
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+}
+
+    .piece{
+      font-size: 36px;
+      cursor: pointer;
+    }
+
+    .piece.draggable{
+      cursor: grab;
+    }
+
+    .dragging{
+      opacity: 0.5;
+    }
+
+    /* rotate pieces for black player */
+    .flipped.piece{
+      transform: rotate(180deg);
+    }
+
+    .chessboard.flipped {
+  transform: rotate(180deg);
+}
+
+.chessboard.flipped .square {
+  transform: rotate(180deg); /* Rotate pieces back to normal */
+}
+
+@keyframes slideDownFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slideDownFade {
+    animation: slideDownFade 0.8s ease-out forwards;
+  }
+  </style>
+
 </head>
 <body>
 
-   <div class="w-full h-screen flex items-center justify-center bg-zinc-900">
-      <div class="w-96 h-96 bg-red-800"></div>
+
+
+  <!-- Navbar -->
+<nav class="animate-slideDownFade text-white fixed top-0 left-0 w-full z-50 font-[Poppins] bg-purple-400">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex-shrink-0">
+        <h1 class="text-2xl font-bold relative inline-block group">
+          ChessGame
+          <span class="absolute left-0 bottom-0 w-0 h-1 bg-white transition-all duration-300 group-hover:w-full"></span>
+        </h1>
+      </div>
     </div>
+  </div>
+</nav>
+
+
+   <div style="background-color: #070517" class="w-full h-screen flex items-center justify-center ">
+    <div class="chess-container"> 
+    <div class="chessboard"></div>
+    </div> 
     
+     <!-- automatically renders chessboard  -->
 
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
   <script src="/js/chessgame.js"></script>
+
+
+<!-- <button onclick="toggleRole()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+  Switch Role
+</button> -->
 
 </body>
 </html>

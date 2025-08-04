@@ -32,13 +32,17 @@ app.get("/", (req,res) => {
 
   if (!players.white) {
     players.white = uniquesocket.id;
-    uniquesocket.emit("playerRole", "W");
+    uniquesocket.emit("playerRole", "w");
+    uniquesocket.emit("boardState", chess.fen());
   } else if (!players.black) {
     players.black = uniquesocket.id;
     uniquesocket.emit("playerRole", "b");
+    uniquesocket.emit("boardState", chess.fen());
   } else {
     uniquesocket.emit("spectatorRole");
+    uniquesocket.emit("boardState", chess.fen());
   }
+   
 
   uniquesocket.on("disconnect", function () {
     console.log("disconnected");
