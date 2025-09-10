@@ -23,7 +23,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res) => {
-    res.render("index", {title: "ChessGame"});
+    res.render("index", {title: "ChessKnight"});
 });
 
 // uniquesocket.on("join", function(){
